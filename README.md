@@ -99,7 +99,7 @@ By working with this project, you will learn:
 
 ## Requirements
 
-- Gitㄋ
+- Git
 - Python 3.x
 - Bash shell
 - Basic understanding of Git workflow
