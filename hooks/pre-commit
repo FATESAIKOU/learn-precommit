@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+echo "🔍 Running custom pre-commit checks..."
+
+# Fail if TODO exists
+if grep -rn 'TODO' src/*.py; then
+  echo "❌ Commit blocked: Please remove TODOs."
+  exit 1
+fi
+
+# Fail if syntax error exists
+for file in $(git diff --cached --name-only --diff-filter=ACM | grep '\.py$'); do
+  echo "🧪 Syntax check: $file"
+  python3 -m py_compile "$file"
+  if [ $? -ne 0 ]; then
+    echo "❌ Commit blocked: Syntax error in $file"
+    exit 1
+  fi
+done
+
+# Fail if tab indentation is used
+if grep -Pr '^\t' src/*.py; then
+  echo "❌ Commit blocked: Tab indentation detected. Use 4 spaces."
+  exit 1
+fi
+
+echo "✅ All pre-commit checks passed!"
+exit 0
